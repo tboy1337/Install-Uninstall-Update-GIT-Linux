@@ -2,8 +2,8 @@
 
 check_sudo() {
     if [ "$EUID" -ne 0 ]; then 
-        echo "This script requires sudo privileges to uninstall Git"
-        echo "Please run with sudo"
+        echo "This script requires sudo privileges to uninstall Git."
+        echo "Please run with sudo."
         exit 4
     fi
 }
@@ -19,14 +19,14 @@ detect_os() {
     elif [[ "$OSTYPE" == "darwin"* ]]; then
         OS="macOS"
     else
-        echo "Unsupported operating system"
+        echo "Unsupported operating system."
         exit 3
     fi
 }
 
 check_git() {
     if ! command -v git &> /dev/null; then
-        echo "Git is not installed on this system"
+        echo "Git is not installed on this system."
         exit 0
     else
         echo "Git is installed. Current version:"
@@ -50,12 +50,12 @@ uninstall_git() {
             brew uninstall git
             ;;
         *)
-            echo "Unsupported operating system for automatic uninstallation"
+            echo "Unsupported operating system for automatic uninstallation."
             exit 2
             ;;
     esac
     
-    echo "Git has been uninstalled"
+    echo "Git has been uninstalled."
 }
 
 check_sudo
@@ -64,9 +64,9 @@ check_git
 uninstall_git
 
 if ! command -v git &> /dev/null; then
-    echo "Verification: Git has been successfully removed"
+    echo "Verification: Git has been successfully removed."
 else
-    echo "Warning: Git might still be installed. Please check manually."
+    echo "Warning: Git might still be installed, please check manually."
 fi
 
 exit 1
