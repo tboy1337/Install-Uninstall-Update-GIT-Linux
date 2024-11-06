@@ -60,12 +60,12 @@ install_update_git() {
 PACKAGE_MANAGER=$(get_package_manager)
 
 if [ "$PACKAGE_MANAGER" = "unknown" ]; then
-    echo "Error: No supported package manager found (brew, apt-get, or yum)"
+    echo "Error: No supported package manager found (brew, apt-get, or yum)."
     exit 1
 fi
 
 install_update_git $PACKAGE_MANAGER
 
-echo "Git installation/update completed using $PACKAGE_MANAGER"
+echo "Git installation/update completed using $PACKAGE_MANAGER."
 
 exit 0
