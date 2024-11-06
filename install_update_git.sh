@@ -29,6 +29,7 @@ install_update_git() {
                 rm -rf /var/lib/apt/lists/*
                 ;;
             "yum")
+                yum update
                 yum update -y git
                 yum clean all
                 rm -rf /var/cache/yum
