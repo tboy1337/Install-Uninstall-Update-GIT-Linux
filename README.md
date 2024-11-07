@@ -1,6 +1,6 @@
 # Install and Uninstall Git on Linux and macOS
 
-This project provides two Bash scripts to manage Git installation on Linux and macOS systems. These scripts allow you to:
+This project provides two Bash scripts to manage Git installation and uninstallation on Linux and macOS systems. These scripts allow you to:
 
 - **Install or update Git** if it’s not already installed.
 - **Uninstall Git** with ease.
