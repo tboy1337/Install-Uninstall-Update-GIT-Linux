@@ -28,7 +28,6 @@ if [ "$OS" == "ubuntu" ] || [ "$OS" == "debian" ]; then
 elif [ "$OS" == "fedora" ]; then
     PACKAGE_MANAGER="dnf"
 elif [ "$OS" == "centos" ]; then
-    # Check if dnf is available, otherwise use yum
     if command -v dnf >/dev/null 2>&1; then
         PACKAGE_MANAGER="dnf"
     else
