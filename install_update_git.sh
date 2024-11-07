@@ -60,6 +60,7 @@ install_update_git() {
                 ;;
             *)
                 echo "Error: Package manager '$package_manager' not supported."
+                sleep 5
                 exit 1
                 ;;
         esac
@@ -89,6 +90,7 @@ install_update_git() {
                 ;;
             *)
                 echo "Error: Package manager '$package_manager' not supported."
+                sleep 5
                 exit 1
                 ;;
         esac
@@ -97,6 +99,7 @@ install_update_git() {
 
 if [ "$PACKAGE_MANAGER" = "unknown" ]; then
     echo "Error: No supported package manager found (brew, apt, yum or pkg)."
+    sleep 5
     exit 1
 fi
 
@@ -104,4 +107,5 @@ install_update_git $PACKAGE_MANAGER
 
 echo "Git installation/update completed using $PACKAGE_MANAGER."
 
+sleep 5
 exit 0
