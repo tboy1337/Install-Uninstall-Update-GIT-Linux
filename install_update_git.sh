@@ -96,7 +96,7 @@ install_update_git() {
 }
 
 if [ "$PACKAGE_MANAGER" = "unknown" ]; then
-    echo "Error: No supported package manager found (brew, apt, yum, pkg)."
+    echo "Error: No supported package manager found (brew, apt, yum or pkg)."
     exit 1
 fi
 
