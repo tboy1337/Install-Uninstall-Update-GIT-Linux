@@ -68,12 +68,14 @@ uninstall_git() {
             ;;
         "yum")
             yum remove git -y
+            yum clean
             ;;
         "brew")
             brew uninstall git
             ;;
         "pkg")
             pkg uninstall git -y
+            pkg  clean -y
             ;;
         *)
             echo "Unsupported package manager for automatic uninstallation."
