@@ -8,20 +8,41 @@ check_sudo() {
     fi
 }
 
-detect_os() {
+detect_os_and_package_manager() {
     if [ -f /etc/os-release ]; then
         . /etc/os-release
-        OS=$NAME
+        OS=$ID
+    elif type lsb_release &> /dev/null; then
+        OS=$(lsb_release -si | tr '[:upper:]' '[:lower:]')
+    elif [ "$(uname -o)" == "Android" ]; then
+        OS="android"
+    elif [ "$(uname)" == "Darwin" ]; then
+        OS="darwin"
     elif [ -f /etc/debian_version ]; then
-        OS="Debian"
-    elif [ -f /etc/redhat-release ]; then
-        OS="RedHat"
-    elif [[ "$OSTYPE" == "darwin"* ]]; then
-        OS="macOS"
+        OS="debian"
+    elif [ -f /etc/fedora-release ]; then
+        OS="fedora"
+    elif [ -f /etc/centos-release ]; then
+        OS="centos"
     else
-        echo "Unsupported operating system."
+        OS=$(uname -s | tr '[:upper:]' '[:lower:]')
+    fi
+
+    if [ "$OS" == "ubuntu" ] || [ "$OS" == "debian" ]; then
+        PACKAGE_MANAGER="apt"
+    elif [ "$OS" == "fedora" ] || [ "$OS" == "centos" ]; then
+        PACKAGE_MANAGER="yum"
+    elif [ "$OS" == "darwin" ]; then
+        PACKAGE_MANAGER="brew"
+    elif [ "$OS" == "android" ]; then
+        PACKAGE_MANAGER="pkg"
+    else
+        echo "Unsupported operating system or package manager."
         exit 3
     fi
+
+    echo "Detected OS: $OS"
+    echo "Using package manager: $PACKAGE_MANAGER"
 }
 
 check_git() {
@@ -37,20 +58,23 @@ check_git() {
 uninstall_git() {
     echo "Uninstalling Git..."
     
-    case $OS in
-        "Ubuntu"|"Debian")
+    case $PACKAGE_MANAGER in
+        "apt")
             apt-get remove --purge git -y
             apt-get autoremove -y
             apt-get autoclean
             ;;
-        "RedHat"|"CentOS"*)
+        "yum")
             yum remove git -y
             ;;
-        "macOS")
+        "brew")
             brew uninstall git
             ;;
+        "pkg")
+            pkg uninstall git -y
+            ;;
         *)
-            echo "Unsupported operating system for automatic uninstallation."
+            echo "Unsupported package manager for automatic uninstallation."
             exit 2
             ;;
     esac
@@ -59,7 +83,7 @@ uninstall_git() {
 }
 
 check_sudo
-detect_os
+detect_os_and_package_manager
 check_git
 uninstall_git
 
