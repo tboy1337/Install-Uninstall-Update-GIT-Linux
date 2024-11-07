@@ -13,7 +13,7 @@ This project provides two Bash scripts to manage Git installation and uninstalla
 ## Requirements
 
 - **Linux or macOS** operating system
-- **Administrator privileges** (use `sudo` as needed)
+- **Administrator privileges** (use `sudo` as needed) (for uninstallation only)
 
 ## Usage
 
