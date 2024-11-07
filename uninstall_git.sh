@@ -25,14 +25,28 @@ detect_os_and_package_manager() {
         OS="fedora"
     elif [ -f /etc/centos-release ]; then
         OS="centos"
+    elif [ -f /etc/arch-release ]; then
+        OS="arch"
+    elif [ -f /etc/gentoo-release ]; then
+        OS="gentoo"
     else
         OS=$(uname -s | tr '[:upper:]' '[:lower:]')
     fi
 
     if [ "$OS" == "ubuntu" ] || [ "$OS" == "debian" ]; then
         PACKAGE_MANAGER="apt"
-    elif [ "$OS" == "fedora" ] || [ "$OS" == "centos" ]; then
-        PACKAGE_MANAGER="yum"
+    elif [ "$OS" == "fedora" ]; then
+        PACKAGE_MANAGER="dnf"
+    elif [ "$OS" == "centos" ]; then
+        if command -v dnf &> /dev/null; then
+            PACKAGE_MANAGER="dnf"
+        else
+            PACKAGE_MANAGER="yum"
+        fi
+    elif [ "$OS" == "arch" ]; then
+        PACKAGE_MANAGER="pacman"
+    elif [ "$OS" == "gentoo" ]; then
+        PACKAGE_MANAGER="emerge"
     elif [ "$OS" == "darwin" ]; then
         PACKAGE_MANAGER="brew"
     elif [ "$OS" == "android" ]; then
@@ -66,16 +80,28 @@ uninstall_git() {
             apt-get autoremove -y
             apt-get autoclean
             ;;
+        "dnf")
+            dnf remove git -y
+            dnf clean all
+            ;;
         "yum")
             yum remove git -y
-            yum clean
+            yum clean all
+            ;;
+        "pacman")
+            pacman -Rns git --noconfirm
+            pacman -Sc --noconfirm
+            ;;
+        "emerge")
+            emerge -C dev-vcs/git
+            emerge --depclean
             ;;
         "brew")
             brew uninstall git
             ;;
         "pkg")
             pkg uninstall git -y
-            pkg  clean -y
+            pkg clean -y
             ;;
         *)
             echo "Unsupported package manager for automatic uninstallation."
