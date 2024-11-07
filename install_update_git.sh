@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# Detect OS and package manager like b.sh
 if [ -f /etc/os-release ]; then
     . /etc/os-release
     OS=$ID
@@ -20,7 +19,6 @@ else
     OS=$(uname -s | tr '[:upper:]' '[:lower:]')
 fi
 
-# Determine package manager based on OS
 if [ "$OS" == "ubuntu" ] || [ "$OS" == "debian" ]; then
     PACKAGE_MANAGER="apt"
 elif [ "$OS" == "fedora" ] || [ "$OS" == "centos" ]; then
