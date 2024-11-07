@@ -4,6 +4,7 @@ check_sudo() {
     if [ "$EUID" -ne 0 ]; then 
         echo "This script requires sudo privileges to uninstall Git."
         echo "Please run with sudo."
+        sleep 5
         exit 4
     fi
 }
@@ -48,6 +49,7 @@ detect_os_and_package_manager() {
 check_git() {
     if ! command -v git &> /dev/null; then
         echo "Git is not installed on this system."
+        sleep 5
         exit 0
     else
         echo "Git is installed. Current version:"
@@ -75,6 +77,7 @@ uninstall_git() {
             ;;
         *)
             echo "Unsupported package manager for automatic uninstallation."
+            sleep 5
             exit 2
             ;;
     esac
@@ -93,4 +96,5 @@ else
     echo "Warning: Git might still be installed, please check manually."
 fi
 
+sleep 5
 exit 1
