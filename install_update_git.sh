@@ -50,12 +50,13 @@ install_update_git() {
             "yum")
                 yum update
                 yum update -y git
-                yum clean all
+                yum clean
                 rm -rf /var/cache/yum
                 ;;
             "pkg")
                 pkg update
                 pkg upgrade -y git
+                pkg  clean -y
                 ;;
             *)
                 echo "Error: Package manager '$package_manager' not supported."
@@ -78,12 +79,13 @@ install_update_git() {
             "yum")
                 yum update
                 yum install -y git
-                yum clean all
+                yum clean
                 rm -rf /var/cache/yum
                 ;;
             "pkg")
                 pkg update
                 pkg install -y git
+                pkg  clean -y
                 ;;
             *)
                 echo "Error: Package manager '$package_manager' not supported."
