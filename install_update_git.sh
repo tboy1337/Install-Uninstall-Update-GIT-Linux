@@ -15,14 +15,29 @@ elif [ -f /etc/fedora-release ]; then
     OS="fedora"
 elif [ -f /etc/centos-release ]; then
     OS="centos"
+elif [ -f /etc/arch-release ]; then
+    OS="arch"
+elif [ -f /etc/gentoo-release ]; then
+    OS="gentoo"
 else
     OS=$(uname -s | tr '[:upper:]' '[:lower:]')
 fi
 
 if [ "$OS" == "ubuntu" ] || [ "$OS" == "debian" ]; then
     PACKAGE_MANAGER="apt"
-elif [ "$OS" == "fedora" ] || [ "$OS" == "centos" ]; then
-    PACKAGE_MANAGER="yum"
+elif [ "$OS" == "fedora" ]; then
+    PACKAGE_MANAGER="dnf"
+elif [ "$OS" == "centos" ]; then
+    # Check if dnf is available, otherwise use yum
+    if command -v dnf >/dev/null 2>&1; then
+        PACKAGE_MANAGER="dnf"
+    else
+        PACKAGE_MANAGER="yum"
+    fi
+elif [ "$OS" == "arch" ]; then
+    PACKAGE_MANAGER="pacman"
+elif [ "$OS" == "gentoo" ]; then
+    PACKAGE_MANAGER="emerge"
 elif [ "$OS" == "darwin" ]; then
     PACKAGE_MANAGER="brew"
 elif [ "$OS" == "android" ]; then
@@ -50,13 +65,28 @@ install_update_git() {
             "yum")
                 yum update
                 yum update -y git
-                yum clean
+                yum clean all
                 rm -rf /var/cache/yum
+                ;;
+            "dnf")
+                dnf check-update
+                dnf upgrade -y git
+                dnf clean all
+                ;;
+            "pacman")
+                pacman -Sy
+                pacman -S --noconfirm git
+                pacman -Scc --noconfirm
+                ;;
+            "emerge")
+                emerge --sync
+                emerge -u dev-vcs/git
+                eclean distfiles
                 ;;
             "pkg")
                 pkg update
                 pkg upgrade -y git
-                pkg  clean -y
+                pkg clean -y
                 ;;
             *)
                 echo "Error: Package manager '$package_manager' not supported."
@@ -80,13 +110,28 @@ install_update_git() {
             "yum")
                 yum update
                 yum install -y git
-                yum clean
+                yum clean all
                 rm -rf /var/cache/yum
+                ;;
+            "dnf")
+                dnf check-update
+                dnf install -y git
+                dnf clean all
+                ;;
+            "pacman")
+                pacman -Sy
+                pacman -S --noconfirm git
+                pacman -Scc --noconfirm
+                ;;
+            "emerge")
+                emerge --sync
+                emerge dev-vcs/git
+                eclean distfiles
                 ;;
             "pkg")
                 pkg update
                 pkg install -y git
-                pkg  clean -y
+                pkg clean -y
                 ;;
             *)
                 echo "Error: Package manager '$package_manager' not supported."
@@ -98,7 +143,7 @@ install_update_git() {
 }
 
 if [ "$PACKAGE_MANAGER" = "unknown" ]; then
-    echo "Error: No supported package manager found (brew, apt, yum or pkg)."
+    echo "Error: No supported package manager found (brew, apt, yum, dnf, pacman, emerge or pkg)."
     sleep 5
     exit 1
 fi
