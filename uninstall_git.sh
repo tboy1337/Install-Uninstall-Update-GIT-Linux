@@ -119,7 +119,7 @@ check_git
 uninstall_git
 
 if ! command -v git &> /dev/null; then
-    echo "Git has been successfully removed."
+    echo "Verification: Git has been successfully removed."
 else
     echo "Warning: Git might still be installed, please check manually."
 fi
