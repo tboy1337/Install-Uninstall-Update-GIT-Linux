@@ -1,8 +1,7 @@
 #!/bin/bash
 
-set -e  # Exit on error
+set -e
 
-# Check for root privileges when needed
 check_root() {
     if [ "$(id -u)" != "0" ] && [ "$PACKAGE_MANAGER" != "brew" ]; then
         echo "Error: This script must be run as root for $PACKAGE_MANAGER operations"
@@ -10,7 +9,6 @@ check_root() {
     fi
 }
 
-# Detect OS and package manager
 detect_system() {
     if [ -f /etc/os-release ]; then
         . /etc/os-release
@@ -21,7 +19,6 @@ detect_system() {
         OS="android"
     elif [ "$(uname)" == "Darwin" ]; then
         OS="darwin"
-        # Check if Homebrew is installed
         if ! command -v brew >/dev/null 2>&1; then
             echo "Error: Homebrew is not installed. Please install it first."
             exit 1
