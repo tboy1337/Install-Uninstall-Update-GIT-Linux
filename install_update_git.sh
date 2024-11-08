@@ -57,13 +57,13 @@ install_update_git() {
                 ;;
             "apt")
                 apt-get update
-                apt-get install --only-upgrade git
+                apt-get upgrade -y git
                 apt-get clean
                 rm -rf /var/lib/apt/lists/*
                 ;;
             "yum")
                 yum update
-                yum update -y git
+                yum upgrade -y git
                 yum clean all
                 rm -rf /var/cache/yum
                 ;;
