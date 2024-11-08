@@ -4,8 +4,7 @@ check_sudo() {
     if [ "$EUID" -ne 0 ]; then 
         echo "This script requires sudo privileges to uninstall Git."
         echo "Please run with sudo."
-        sleep 5
-        exit 4
+        exit 1
     fi
 }
 
@@ -53,17 +52,16 @@ detect_os_and_package_manager() {
         PACKAGE_MANAGER="pkg"
     else
         echo "Unsupported operating system or package manager."
-        exit 3
+        exit 1
     fi
 
     echo "Detected OS: $OS"
-    echo "Using package manager: $PACKAGE_MANAGER."
+    echo "Using package manager: $PACKAGE_MANAGER"
 }
 
 check_git() {
     if ! command -v git &> /dev/null; then
         echo "Git is not installed on this system."
-        sleep 5
         exit 0
     else
         echo "Git is installed, current version:"
@@ -76,53 +74,60 @@ uninstall_git() {
     
     case $PACKAGE_MANAGER in
         "apt")
-            apt-get remove --purge git -y
+            apt-get update
+            apt-get remove --purge git git-core git-man git-doc -y
             apt-get autoremove -y
             apt-get autoclean
             ;;
         "dnf")
-            dnf remove git -y
+            dnf remove git git-core git-doc -y
             dnf clean all
             ;;
         "yum")
-            yum remove git -y
+            yum remove git git-core git-doc -y
             yum clean all
             ;;
         "pacman")
+            pacman -Sy
             pacman -Rns git --noconfirm
             pacman -Sc --noconfirm
             ;;
         "emerge")
+            emerge --sync
             emerge -C dev-vcs/git
             emerge --depclean
             ;;
         "brew")
+            brew update
             brew uninstall git
             ;;
         "pkg")
+            pkg update
             pkg uninstall git -y
             pkg clean -y
             ;;
         *)
             echo "Unsupported package manager for automatic uninstallation."
-            sleep 5
-            exit 2
+            exit 1
             ;;
     esac
     
     echo "Git has been uninstalled."
 }
 
-check_sudo
-detect_os_and_package_manager
-check_git
-uninstall_git
+main() {
+    check_sudo
+    detect_os_and_package_manager
+    check_git
+    uninstall_git
 
-if ! command -v git &> /dev/null; then
-    echo "Verification: Git has been successfully removed."
-else
-    echo "Warning: Git might still be installed, please check manually."
-fi
+    if ! command -v git &> /dev/null; then
+        echo "Verification: Git has been successfully removed."
+        exit 0
+    else
+        echo "Warning: Git might still be installed, please check manually."
+        exit 1
+    fi
+}
 
-sleep 5
-exit 1
+main
