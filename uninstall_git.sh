@@ -57,7 +57,7 @@ detect_os_and_package_manager() {
     fi
 
     echo "Detected OS: $OS"
-    echo "Using package manager: $PACKAGE_MANAGER"
+    echo "Using package manager: $PACKAGE_MANAGER."
 }
 
 check_git() {
