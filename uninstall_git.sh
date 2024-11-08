@@ -66,7 +66,7 @@ check_git() {
         sleep 5
         exit 0
     else
-        echo "Git is installed. Current version:"
+        echo "Git is installed, current version:"
         git --version
     fi
 }
@@ -119,7 +119,7 @@ check_git
 uninstall_git
 
 if ! command -v git &> /dev/null; then
-    echo "Verification: Git has been successfully removed."
+    echo "Git has been successfully removed."
 else
     echo "Warning: Git might still be installed, please check manually."
 fi
